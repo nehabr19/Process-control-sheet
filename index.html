@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Page by Colorlib</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+    header {
+        background-color: blue;
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
+    .signin-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 100px);
+    }
+    .signin-image img {
+        width: 300px;
+        height: auto;
+    }
+    .signin-form {
+        padding: 20px;
+        background-color: #f2f2f2;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    .form-group input[type="checkbox"] {
+        width: auto;
+    }
+    .form-button {
+        text-align: center;
+    }
+    .form-button .form-submit {
+        background-color: blue;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .form-button .form-submit:hover {
+        background-color: darkblue;
+    }
+</style>
+</head>
+<body>
+<header style="background-color: blue; padding-right: 20px; color: white; text-align: center;">
+    	
+        <h1 style="display: inline-block; margin: 0; padding: 10px 10px;">[XYZ] AERONAUTICS LIMITED</h1>
+    </header>
+
+<div class="signin-content">
+    <div class="signin-form">
+        <h2 class="form-title">Sign In</h2>
+        <form method="POST" action="CallServlet2" class="register-form" id="login-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" placeholder="Your Name" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="Password" />
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
+                <label for="remember-me" class="label-agree-term">Remember me</label>
+            </div>
+            <div class="form-group form-button">
+                <input type="submit" name="signin" id="signin" class="form-submit" value="Login" />
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+    			<a href="login.html">Create Account</a>
+			</div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

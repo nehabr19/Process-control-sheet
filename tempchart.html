@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Graph</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+        .temperature-info {
+            text-align: center;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+	<header style="background-color: blue; padding-right: 20px; color: white; text-align: center; padding-bottom:10px ;">
+    	
+        <h1 style="display: inline-block; margin: 0; padding: 10px 10px;">[XYZ] AERONAUTICS LIMITED</h1>
+    </header>
+    <h1>Temperature Graph</h1>
+    <div class="chart-container">
+        <canvas id="temperatureChart" width="800" height="400"></canvas>
+    </div>
+    <div class="temperature-info" id="temperatureInfo">
+        <p>Click on a data point to view temperature information.</p>
+    </div>
+    
+
+    <script>
+        var canvas = document.getElementById('temperatureChart');
+        var ctx = canvas.getContext('2d');
+
+        // Fetch data from server and draw the graph
+        fetch('TemperatureDataServlet')
+            .then(response => response.json())
+            .then(data => {
+                var temperatures = data.map(entry => entry.temperature);
+                var times = data.map(entry => entry.time);
+
+                // Define graph properties
+                var margin = 50;
+                var graphWidth = canvas.width - 2 * margin;
+                var graphHeight = canvas.height - 2 * margin;
+                var maxY = Math.max(...temperatures);
+                var minY = Math.min(...temperatures);
+                var yScale = graphHeight / (maxY - minY);
+
+                // Draw x and y axes
+                ctx.beginPath();
+                ctx.moveTo(margin, margin);
+                ctx.lineTo(margin, canvas.height - margin);
+                ctx.lineTo(canvas.width - margin, canvas.height - margin);
+                ctx.stroke();
+
+                // Draw temperature points
+                ctx.beginPath();
+                for (var i = 0; i < temperatures.length; i++) {
+                    var x = margin + (graphWidth / (temperatures.length - 1)) * i;
+                    var y = canvas.height - margin - (temperatures[i] - minY) * yScale;
+                    ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                    ctx.fillText(times[i], x - 20, canvas.height - margin + 20);
+                    ctx.fillText(temperatures[i], margin - 30, y + 5);
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+
+                // Add click event listener to canvas
+                canvas.addEventListener('click', function(event) {
+                    var rect = canvas.getBoundingClientRect();
+                    var x = event.clientX - rect.left;
+                    var y = event.clientY - rect.top;
+
+                    // Check if any temperature point was clicked
+                    for (var i = 0; i < temperatures.length; i++) {
+                        var pointX = margin + (graphWidth / (temperatures.length - 1)) * i;
+                        var pointY = canvas.height - margin - (temperatures[i] - minY) * yScale;
+                        if (Math.abs(x - pointX) < 5 && Math.abs(y - pointY) < 5) {
+                            var temperatureInfo = document.getElementById('temperatureInfo');
+                            temperatureInfo.innerHTML = '<p>Temperature: ' + temperatures[i] + ', Time: ' + times[i] + '</p>';
+                            break;
+                        }
+                    }
+                });
+            });
+    </script>
+    <br> <br><br>
+    <hr>
+    
+    <h1>Temperature Chart</h1>
+    <table id="temperatureTable">
+        <thead>
+            <tr>
+                <th>Temperature (°C)</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows will be dynamically added here -->
+        </tbody>
+    </table>
+    
+
+    <script>
+        // Function to fetch and display temperature data
+        function displayTemperatureData() {
+            fetch('TemperatureDataServlet')
+                .then(response => response.json())
+                .then(data => {
+                    var tableBody = document.getElementById('temperatureTable').getElementsByTagName('tbody')[0];
+                    data.forEach(entry => {
+                        var row = tableBody.insertRow();
+                        var temperatureCell = row.insertCell(0);
+                        var timeCell = row.insertCell(1);
+                        temperatureCell.textContent = entry.temperature.toFixed(2);
+                        timeCell.textContent = entry.time;
+                    });
+                })
+                .catch(error => console.error('Error fetching temperature data:', error));
+        }
+
+        // Call the function to display temperature data
+        displayTemperatureData();
+    </script>
+</body>
+</html>
